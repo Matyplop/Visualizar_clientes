@@ -6,6 +6,38 @@ import tempfile
 import os
 import streamlit.components.v1 as components
 
+
+# Cargar credenciales desde secrets.toml
+USERNAME = st.secrets["credentials"]["username"]
+PASSWORD = st.secrets["credentials"]["password"]
+
+# Inicializar sesión
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+# Mostrar login si no está autenticado
+if not st.session_state.authenticated:
+    st.title("🔐 Inicio de Sesión")
+
+    # Campos de usuario y contraseña
+    input_user = st.text_input("Usuario", value="", key="user")
+    input_pass = st.text_input("Contraseña", value="", type="password", key="pass")
+
+    # Botón para iniciar sesión
+    if st.button("Ingresar"):
+        if input_user == USERNAME and input_pass == PASSWORD:
+            st.session_state.authenticated = True  # Autenticación exitosa
+            st.success("✅ Inicio de sesión exitoso. Cargando la aplicación...")
+            st.rerun()
+        else:
+            st.error("❌ Usuario o contraseña incorrectos")
+    
+    st.stop()
+
+# Si el usuario está autenticado, mostrar la aplicación
+
+    st.title("📊 Visualización de Clientes")
+
 # Intentar importar pyvis, con manejo de errores si no está disponible
 try:
     from pyvis.network import Network
